@@ -71,34 +71,3 @@ class CashCalculator(Calculator):
         else:
             return (f'Денег нет, держись: твой долг - {abs(cash):.2f} '
                     f'{self.CURRENCIES[currency][0]}')
-
-
-cash_calculator = CashCalculator(300)
-
-# дата в параметрах не указана,
-# так что по умолчанию к записи
-# должна автоматически добавиться сегодняшняя дата
-cash_calculator.add_record(Record(amount=145, comment='кофе'))
-# и к этой записи тоже дата должна добавиться автоматически
-cash_calculator.add_record(Record(amount=300, comment='Серёге за обед'))
-# а тут пользователь указал дату, сохраняем её
-cash_calculator.add_record(Record(amount=3000,
-                                  comment='бар в Танин др',
-                                  date='08.11.2019'))
-
-print(cash_calculator.get_today_cash_remained('rub'))
-
-r1 = Record(amount=145, comment='Безудержный шопинг', date='08.03.2019')
-r2 = Record(amount=1568,
-            comment='Наполнение потребительской корзины',
-            date='09.03.2019')
-r3 = Record(amount=691, comment='Катание на такси', date='08.03.2019')
-
-# для CaloriesCalculator
-calor = CaloriesCalculator(300)
-r4 = Record(amount=1186,
-            comment='Кусок тортика. И ещё один.')
-r5 = Record(amount=84, comment='Йогурт.')
-r6 = Record(amount=1140, comment='Баночка чипсов.')
-
-print(calor.get_calories_remained())

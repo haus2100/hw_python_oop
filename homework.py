@@ -1,4 +1,6 @@
 import datetime as dt
+
+
 format = '%d.%m.%Y'
 
 
@@ -9,7 +11,7 @@ class Record:
         self.amount = amount
         self.comment = comment
         if date is None:
-            self.date = dt.datetime.today().date()
+            self.date = dt.date.today()
         else:
             self.date = dt.datetime.strptime(date, '%d.%m.%Y').date()
 
@@ -23,7 +25,7 @@ class Calculator:
         self.records.append(record)
 
     def get_today_stats(self):
-        today = dt.datetime.today().date()
+        today = dt.date.today()
         stat = sum(record.amount for record in self.records if
                    record.date == today)
         return stat
@@ -37,17 +39,20 @@ class Calculator:
                 sum += record.amount
         return sum
 
+    def get_calc(self):
+        calc = self.limit - self.get_today_stats()
+        return calc
+
 
 class CaloriesCalculator(Calculator):
 
     def get_calories_remained(self):
-        calories_day = self.limit - self.get_today_stats()
+        calories_day = self.get_calc()
         if calories_day > 0:
-            return (f'Сегодня можно съесть что-нибудь ещё, '
+            return ('Сегодня можно съесть что-нибудь ещё, '
                     'но с общей калорийностью не более '
-                    f'{self.limit - self.get_today_stats()} кКал')
-        else:
-            return 'Хватит есть!'
+                    f'{calories_day} кКал')
+        return 'Хватит есть!'
 
 
 class CashCalculator(Calculator):
@@ -61,13 +66,14 @@ class CashCalculator(Calculator):
     }
 
     def get_today_cash_remained(self, currency):
-        cash_day = self.limit - self.get_today_stats()
-        cash = cash_day / self.CURRENCIES[currency][1]
-        if cash_day > 0:
-            return (f'На сегодня осталось {(cash):.2f} '
-                    f'{self.CURRENCIES[currency][0]}')
+        cash_day = self.get_calc()
         if cash_day == 0:
             return 'Денег нет, держись'
         else:
-            return (f'Денег нет, держись: твой долг - {abs(cash):.2f} '
-                    f'{self.CURRENCIES[currency][0]}')
+            cash = cash_day / self.CURRENCIES[currency][1]
+            abs_cash = abs(cash)
+            currency_cash = self.CURRENCIES[currency][0]
+            if cash_day > 0:
+                return (f'На сегодня осталось {cash:.2f} {currency_cash}')
+            return (f'Денег нет, держись: твой долг - {abs_cash:.2f} '
+                    f'{currency_cash}')

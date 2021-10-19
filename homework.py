@@ -62,18 +62,22 @@ class CashCalculator(Calculator):
     CURRENCIES = {
         'rub': ('руб', RUB_RATE),
         'eur': ('Euro', EURO_RATE),
-        'usd': ('USD', USD_RATE)
-    }
+        'usd': ('USD', USD_RATE)}
 
     def get_today_cash_remained(self, currency):
+
+        currenciess = {
+            'rub': ('руб', self.RUB_RATE),
+            'eur': ('Euro', self.EURO_RATE),
+            'usd': ('USD', self.USD_RATE)}
+
         cash_day = self.get_calc()
         if cash_day == 0:
             return 'Денег нет, держись'
-        else:
-            cash = cash_day / self.CURRENCIES[currency][1]
-            abs_cash = abs(cash)
-            currency_cash = self.CURRENCIES[currency][0]
-            if cash_day > 0:
-                return (f'На сегодня осталось {cash:.2f} {currency_cash}')
-            return (f'Денег нет, держись: твой долг - {abs_cash:.2f} '
-                    f'{currency_cash}')
+        cash = cash_day / self.CURRENCIES[currency][1]
+        abs_cash = abs(cash)
+        currency_cash, cur_cash = currenciess.get(currency)
+        if cash_day > 0:
+            return (f'На сегодня осталось {cash:.2f} {currency_cash}')
+        return (f'Денег нет, держись: твой долг - {abs_cash:.2f} '
+                f'{currency_cash}')
